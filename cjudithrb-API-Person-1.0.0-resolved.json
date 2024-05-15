@@ -1,0 +1,396 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Catálogo de APIs G&M",
+    "description": "Documentación de las APIs para la empresa de seguros G&M.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://api.example.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Person",
+      "description": "Gestión de personas"
+    }
+  ],
+  "paths": {
+    "/person": {
+      "get": {
+        "tags": [
+          "Person"
+        ],
+        "summary": "Obtiene todas las personas.",
+        "description": "Retorna una lista de todas las personas registradas en el sistema.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonOutput"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No existe personas registradas"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Person"
+        ],
+        "summary": "Crea una nueva persona.",
+        "description": "Crea un nuevo registro de persona.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request <br>- **ERR0001:** Error, complete los campos obligatorios <br>- **ERR0002:** Error, no debe tener caracteres especiales <br>- **ERR0005:** Error, tipo de documento inválido <br>- **ERR0006:** Error, solo se aceptan números <br>- **ERR0007:** Error, DNI debe tener 8 dígitos <br>- **ERR0008:** Error, no tiene la cantidad de caracteres correctos <br>- **ERR0009:**\tError, RUC debe tener 11 dígitos <br>- **ERR0010:**\tError, RUC inválido <br>- **ERR0011:**\tError, no se permite ceros a la izquierda <br>- **ERR0012:**\tError, la fecha de nacimiento no puede ser menor a 1900-01           -01 <br>- **ERR0013:**\tError, la fecha de nacimiento no puede ser futura <br>- **ERR0014:**\tError, formato de fecha inválido <br>- **ERR0015:**\tError, campo no puede exceder longitud máxima <br>- **ERR0016:**\tError, campo no puede contener espacios en blanco al inicio o al final",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 Conflict <br>- **ERR0004:** Error, la persona ya ha sido registrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "x-code-samples": [
+        {
+          "lang": "curl",
+          "label": "Curl",
+          "source": "curl -X POST \"http://api.example.com/person\" -H \"Content-Type: application/json\" -d '{\"documentTypeId\":1, \"documentNumber\":\"123456789\", \"firstName\":\"Judith\", \"lastName\":\"Rojas\",\"secondLastName\": \"Barraza\", \"gender\": \"masculino\",\"maritalStatus\": \"casado\", \"birthdate\":\"1990-01-01\"}'\n"
+        }
+      ]
+    },
+    "/person/{personId}": {
+      "get": {
+        "tags": [
+          "Person"
+        ],
+        "summary": "Obtiene los detalles de una persona por su ID.",
+        "description": "Retorna los detalles de una persona específica basada en su ID.",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "description": "ID de la persona a obtener.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request <br>- **ERR0001:** Error, complete los campos obligatorios <br>- **ERR0017:** Error, codigo de empleado invalido"
+          },
+          "404": {
+            "description": "Not Found <br>- **ERR0003:** Error, la persona no existe",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Person"
+        ],
+        "summary": "Actualiza los detalles de una persona por su ID.",
+        "description": "Actualiza los detalles de una persona específica basada en su ID.",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "description": "ID de la persona a actualizar.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request <br>- **ERR0001:** Error, complete los campos obligatorios <br>- **ERR0002:** Error, no debe tener caracteres especiales <br>- **ERR0005:** Error, tipo de documento inválido <br>- **ERR0006:** Error, solo se aceptan números <br>- **ERR0007:** Error, DNI debe tener 8 dígitos <br>- **ERR0008:** Error, no tiene la cantidad de caracteres correctos <br>- **ERR0009:**\tError, RUC debe tener 11 dígitos <br>- **ERR0010:**\tError, RUC inválido <br>- **ERR0011:**\tError, no se permite ceros a la izquierda <br>- **ERR0012:**\tError, la fecha de nacimiento no puede ser menor a 1900-01           -01 <br>- **ERR0013:**\tError, la fecha de nacimiento no puede ser futura <br>- **ERR0014:**\tError, formato de fecha inválido <br>- **ERR0015:**\tError, campo no puede exceder longitud máxima <br>- **ERR0016:**\tError, campo no puede contener espacios en blanco al inicio o al final"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Person"
+        ],
+        "summary": "Elimina una persona por su ID.",
+        "description": "Elimina una persona específica basada en su ID.",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "description": "ID de la persona a eliminar.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request <br>- **ERR0001:** Error, complete los campos obligatorios <br>- **ERR0017:** Error, codigo de empleado invalido"
+          },
+          "404": {
+            "description": "Not Found <br>- **ERR0003:** Error, la persona no existe"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "x-code-samples": [
+        {
+          "lang": "curl",
+          "label": "Curl",
+          "source": "curl -X DELETE \"http://api.example.com/person/{personId}\"\n"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "PersonInput": {
+        "type": "object",
+        "properties": {
+          "documentTypeId": {
+            "type": "integer",
+            "description": "Tipo de documento:\n- 1: DNI (Documento Nacional de Identidad)\n- 2: RUC (Registro Único de Contribuyentes)\n- 3: Pasaporte\n- 4: Carnet de Extranjería\n",
+            "example": 1
+          },
+          "documentNumber": {
+            "type": "string",
+            "description": "Número de documento.\n- Para DNI: Debe contener exactamente 8 dígitos.\n- Para RUC: Debe contener exactamente 11 dígitos.\n- Para Pasaporte y Carnet de Extranjería: Puede contener hasta 12 caracteres alfanuméricos.\n",
+            "example": "12345678"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Primer nombre o nombres de la persona.\nDebe contener caracteres alfabéticos.\n",
+            "example": "Judiht"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Apellido paterno de la persona.\nDebe contener caracteres alfabéticos.\n",
+            "example": "Rojas"
+          },
+          "secondLastName": {
+            "type": "string",
+            "description": "Apellido materno de la persona.\nDebe contener caracteres alfabéticos.\n",
+            "example": "Barraza"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Género de la persona.\nOpciones válidas: masculino, femenino, otros.\n",
+            "example": "femenino",
+            "enum": [
+              "masculino",
+              "femenino",
+              "otros"
+            ]
+          },
+          "maritalStatus": {
+            "type": "string",
+            "description": "Estado civil de la persona.\nOpciones válidas: soltero, casado, divorciado, viudo.\n",
+            "example": "casado",
+            "enum": [
+              "soltero",
+              "casado",
+              "divorciado",
+              "viudo"
+            ]
+          },
+          "birthdate": {
+            "type": "string",
+            "description": "Fecha de nacimiento en formato YYYY-MM-DD.\nNo se permiten fechas anteriores a la fecha actual.\n",
+            "format": "date",
+            "example": "2000-01-01"
+          }
+        }
+      },
+      "PersonOutput": {
+        "type": "object",
+        "properties": {
+          "personId": {
+            "type": "integer",
+            "readOnly": true,
+            "example": 1
+          },
+          "documentTypeId": {
+            "type": "integer",
+            "description": "Tipo de documento:\n- 1: DNI (Documento Nacional de Identidad)\n- 2: RUC (Registro Único de Contribuyentes)\n- 3: Pasaporte\n- 4: Carnet de Extranjería\n",
+            "readOnly": true,
+            "example": 1
+          },
+          "documentNumber": {
+            "type": "string",
+            "description": "Número de documento.\n- Para DNI: Debe contener exactamente 8 dígitos.\n- Para RUC: Debe contener exactamente 11 dígitos.\n- Para Pasaporte y Carnet de Extranjería: Puede contener hasta 12 caracteres alfanuméricos.\n",
+            "readOnly": true,
+            "example": "12345678"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Primer nombre o nombres de la persona.\nDebe contener caracteres alfabéticos.\n",
+            "readOnly": true,
+            "example": "Judiht"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Apellido paterno de la persona.\nDebe contener caracteres alfabéticos.\n",
+            "readOnly": true,
+            "example": "Rojas"
+          },
+          "secondLastName": {
+            "type": "string",
+            "description": "Apellido materno de la persona.\nDebe contener caracteres alfabéticos.\n",
+            "readOnly": true,
+            "example": "Barraza"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Género de la persona.\nOpciones válidas: masculino, femenino, otros.\n",
+            "readOnly": true,
+            "example": "femenino",
+            "enum": [
+              "masculino",
+              "femenino",
+              "otros"
+            ]
+          },
+          "maritalStatus": {
+            "type": "string",
+            "description": "Estado civil de la persona.\nOpciones válidas: soltero, casado, divorciado, viudo.\n",
+            "readOnly": true,
+            "example": "casado",
+            "enum": [
+              "soltero",
+              "casado",
+              "divorciado",
+              "viudo"
+            ]
+          },
+          "birthdate": {
+            "type": "string",
+            "description": "Fecha de nacimiento en formato YYYY-MM-DD.\nNo se permiten fechas anteriores a la fecha actual.\n",
+            "format": "date",
+            "readOnly": true,
+            "example": "1990-01-01"
+          },
+          "isCustomer": {
+            "type": "boolean",
+            "description": "Indica si la persona es cliente o no.\n",
+            "readOnly": true,
+            "example": true
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error-code": {
+            "type": "string"
+          },
+          "error-message": {
+            "type": "string"
+          },
+          "trace-id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
